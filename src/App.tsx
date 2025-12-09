@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
 import { useConnect, useConnectors, useConnection, useDisconnect } from 'wagmi'
 
+import { Hooks } from 'tempo.ts/wagmi'
+
 const App = () => {
 
     const { address, isConnected } = useConnection()
@@ -8,9 +10,19 @@ const App = () => {
     const [connector] = useConnectors()
     const { disconnect } = useDisconnect()
 
+    const { mutate: enableFaucet , isPending } = Hooks.faucet.useFundSync()
+
     useEffect(() => {
         console.log(isConnected)
     }, [isConnected, address])
+
+    const faucet = async () => {
+        console.log(`Emitting faucet trigger`)
+        enableFaucet({
+            account: address!
+        })
+    }
+
 
     return (
         <div>
@@ -39,6 +51,8 @@ const App = () => {
             }}>
                 Sign In
             </button>
+            <p>{`Don't have funds yet? Get some test funds`}</p>
+            <button onClick={faucet} disabled={isPending}>Get Test Funds</button>
         </div>
     )
 }
