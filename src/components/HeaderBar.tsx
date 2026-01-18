@@ -1,5 +1,6 @@
 import {
   Badge,
+  Box,
   Button,
   Divider,
   Flex,
@@ -94,12 +95,8 @@ const HeaderBar = ({
                 {shortAddress}
               </Text>
             </MenuButton>
-            <MenuList bg="tempo.panel" borderColor="tempo.border" minW="360px">
-              <MenuItem
-                closeOnSelect={false}
-                bg="transparent"
-                _hover={{ bg: 'tempo.panelStrong' }}
-              >
+            <MenuList bg="tempo.panel" borderColor="tempo.border" minW="360px" p={0}>
+              <Box p={0}>
                 <BalancesPanel
                   address={address}
                   title="Balances"
@@ -107,7 +104,7 @@ const HeaderBar = ({
                   tokens={tokens}
                   faucetControls={faucetControls}
                 />
-              </MenuItem>
+              </Box>
               <Divider borderColor="tempo.border" />
               <MenuItem
                 onClick={onSignOut}

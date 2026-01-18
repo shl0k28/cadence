@@ -23,6 +23,7 @@ const theme = extendTheme({
       accent: '#38cfff',
       success: '#7affb4',
       warning: '#ffc538',
+      error: '#ff6b6b',
     },
   },
   styles: {

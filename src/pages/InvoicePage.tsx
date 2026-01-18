@@ -376,63 +376,103 @@ const InvoicePage = ({ tokens, faucetControls }: InvoicePageProps) => {
     }
   }
 
+  if (loading) {
+    return (
+      <Surface p={{ base: 6, md: 8 }}>
+        <Text color="tempo.muted">Loading invoice…</Text>
+      </Surface>
+    )
+  }
+
+  if (error) {
+    return (
+      <Surface p={{ base: 6, md: 8 }}>
+        <Text color="tempo.error">{error}</Text>
+      </Surface>
+    )
+  }
+
+  if (!invoice) {
+    return null
+  }
+
   return (
-    <Stack spacing={6}>
-      <Surface p={{ base: 5, md: 6 }}>
-        <Stack spacing={4}>
-          {loading && <Text color="tempo.muted">Loading invoice…</Text>}
-          {error && <Text color="red.300">{error}</Text>}
-          {invoice && (
-            <Stack spacing={4}>
-              <Flex align="center" justify="space-between" wrap="wrap" gap={3}>
-                <Heading size="md">{invoice.title}</Heading>
-                <Badge bg="tempo.panelStrong" color="tempo.text" px={3} py={1}>
+    <Stack spacing={8}>
+      {/* Main Invoice Card - Stripe-style layout */}
+      <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap={6}>
+        {/* Left Column - Invoice Details */}
+        <GridItem>
+          <Surface p={{ base: 6, md: 8 }}>
+            <Stack spacing={6}>
+              {/* Header Section */}
+              <Flex align="flex-start" justify="space-between" wrap="wrap" gap={4}>
+                <Box flex="1" minW="200px">
+                  <Heading size="xl" mb={2}>{invoice.title}</Heading>
+                  {invoice.invoice_display_id && (
+                    <Text fontSize="sm" color="tempo.muted" fontFamily="mono">
+                      {invoice.invoice_display_id}
+                    </Text>
+                  )}
+                  {!invoice.invoice_display_id && (
+                    <Text fontSize="sm" color="tempo.muted" fontFamily="mono">
+                      {invoice.id.slice(0, 8)}...
+                    </Text>
+                  )}
+                </Box>
+                <Badge 
+                  bg={
+                    invoice.status === 'paid' 
+                      ? 'tempo.success' 
+                      : invoice.status === 'open' 
+                      ? 'tempo.accent' 
+                      : 'tempo.panelStrong'
+                  }
+                  color={invoice.status === 'paid' ? '#0d0d0d' : 'tempo.text'}
+                  px={4}
+                  py={1.5}
+                  borderRadius="6px"
+                  fontSize="sm"
+                  fontWeight="600"
+                  textTransform="uppercase"
+                  letterSpacing="0.05em"
+                >
                   {invoice.status}
                 </Badge>
               </Flex>
-              <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
-                <Inset p={3}>
-                  <Text fontSize="xs" color="tempo.muted">
-                    Amount
-                  </Text>
-                  <Text fontWeight="600" fontSize="lg">
+
+              {/* Divider */}
+              <Box h="1px" bg="tempo.border" />
+
+              {/* Amount Section - Prominent */}
+              <Box>
+                <Text fontSize="xs" fontWeight="600" color="tempo.muted" mb={2} textTransform="uppercase" letterSpacing="0.05em">
+                  Amount Due
+                </Text>
+                <HStack spacing={3} align="baseline">
+                  <Text fontWeight="700" fontSize="3xl">
                     ${Number(invoice.amount_usd).toFixed(2)}
                   </Text>
-                </Inset>
-                <Inset p={3}>
-                  <Text fontSize="xs" color="tempo.muted">
-                    Token
-                  </Text>
-                  <HStack spacing={2} align="center">
-                    <TokenLogo
-                      token={
-                        invoiceToken ?? {
-                          symbol: invoice.token_symbol,
-                        }
-                      }
-                      boxSize="32px"
-                    />
-                    <Text fontWeight="600">
-                      {invoiceToken?.symbol ?? invoice.token_symbol}
-                    </Text>
-                  </HStack>
-                </Inset>
-                <Inset p={3}>
-                  <Text fontSize="xs" color="tempo.muted">
-                    Invoice
-                  </Text>
-                  <Text fontWeight="600">
-                    {invoice.invoice_display_id ?? invoice.id}
-                  </Text>
-                </Inset>
-              </SimpleGrid>
+                  {invoiceToken && (
+                    <HStack spacing={2} align="center">
+                      <TokenLogo token={invoiceToken} boxSize="24px" />
+                      <Text fontSize="lg" color="tempo.muted" fontWeight="500">
+                        {invoiceToken.symbol}
+                      </Text>
+                    </HStack>
+                  )}
+                </HStack>
+              </Box>
 
-              <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-                <Inset p={3}>
-                  <Text fontSize="xs" color="tempo.muted">
-                    Seller
+              {/* Divider */}
+              <Box h="1px" bg="tempo.border" />
+
+              {/* Invoice Details Grid */}
+              <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+                <Box>
+                  <Text fontSize="xs" fontWeight="600" color="tempo.muted" mb={3} textTransform="uppercase" letterSpacing="0.05em">
+                    Bill From
                   </Text>
-                  <Text fontWeight="600">
+                  <Text fontWeight="600" mb={1}>
                     {merchant?.seller_name ?? 'Tempo merchant'}
                   </Text>
                   {merchant && (
@@ -440,144 +480,251 @@ const InvoicePage = ({ tokens, faucetControls }: InvoicePageProps) => {
                       {formatAddress(merchant.address)}
                     </Text>
                   )}
-                </Inset>
-                <Inset p={3}>
-                  <Text fontSize="xs" color="tempo.muted">
-                    Status
+                </Box>
+                
+                <Box>
+                  <Text fontSize="xs" fontWeight="600" color="tempo.muted" mb={3} textTransform="uppercase" letterSpacing="0.05em">
+                    Invoice Details
                   </Text>
-                  <HStack spacing={2} align="center">
-                    <Badge bg="tempo.panelStrong" color="tempo.text" px={2}>
-                      {invoice.status}
+                  <Stack spacing={2}>
+                    <Flex justify="space-between">
+                      <Text fontSize="sm" color="tempo.muted">Invoice ID</Text>
+                      <Text fontSize="sm" fontFamily="mono" fontWeight="500">
+                        {invoice.invoice_display_id ?? invoice.id.slice(0, 12)}...
+                      </Text>
+                    </Flex>
+                    {invoice.paid_at && (
+                      <Flex justify="space-between">
+                        <Text fontSize="sm" color="tempo.muted">Paid on</Text>
+                        <Text fontSize="sm" fontWeight="500">
+                          {new Date(invoice.paid_at).toLocaleDateString()}
+                        </Text>
+                      </Flex>
+                    )}
+                    {invoice.paid_tx_hash && (
+                      <Flex justify="space-between" align="center">
+                        <Text fontSize="sm" color="tempo.muted">Transaction</Text>
+                        {explorerBaseUrl ? (
+                          <Button
+                            as="a"
+                            href={`${explorerBaseUrl}/tx/${invoice.paid_tx_hash}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            variant="link"
+                            color="tempo.accent"
+                            fontSize="sm"
+                            fontWeight="500"
+                            p={0}
+                            minW="auto"
+                          >
+                            View on explorer
+                          </Button>
+                        ) : (
+                          <Text fontSize="sm" fontFamily="mono">
+                            {invoice.paid_tx_hash.slice(0, 10)}...
+                          </Text>
+                        )}
+                      </Flex>
+                    )}
+                  </Stack>
+                </Box>
+              </SimpleGrid>
+
+              {/* Invoice Image */}
+              {invoice.image_url && (
+                <>
+                  <Box h="1px" bg="tempo.border" />
+                  <Box borderRadius="12px" overflow="hidden">
+                    <img 
+                      src={invoice.image_url} 
+                      alt={invoice.title}
+                      style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}
+                    />
+                  </Box>
+                </>
+              )}
+
+              {/* Description */}
+              {invoice.description && (
+                <>
+                  <Box h="1px" bg="tempo.border" />
+                  <Box>
+                    <Text fontSize="xs" fontWeight="600" color="tempo.muted" mb={2} textTransform="uppercase" letterSpacing="0.05em">
+                      Description
+                    </Text>
+                    <Text color="tempo.text" lineHeight="1.6">
+                      {invoice.description}
+                    </Text>
+                  </Box>
+                </>
+              )}
+            </Stack>
+          </Surface>
+        </GridItem>
+
+        {/* Right Column - Payment Section */}
+        <GridItem>
+          <Box position={{ lg: 'sticky' }} top={{ lg: 6 }}>
+            <Surface p={6}>
+              <Stack spacing={4}>
+                <Heading size="md" mb={2}>Pay invoice</Heading>
+                
+                {!isConnected && (
+                  <Stack spacing={3}>
+                    <Text fontSize="sm" color="tempo.muted">
+                      Connect your wallet to pay this invoice.
+                    </Text>
+                    <Button
+                      onClick={() => connect.connect({ connector })}
+                      disabled={!isSupabaseConfigured}
+                      size="lg"
+                      width="100%"
+                    >
+                      Sign in to pay
+                    </Button>
+                  </Stack>
+                )}
+
+                {isConnected && invoice?.status === 'paid' && (
+                  <Stack spacing={3} align="center" py={4}>
+                    <Badge 
+                      bg="tempo.success" 
+                      color="#0d0d0d"
+                      px={4}
+                      py={2}
+                      borderRadius="6px"
+                      fontSize="sm"
+                      fontWeight="600"
+                    >
+                      ✓ Paid
                     </Badge>
+                    <Text fontSize="sm" color="tempo.muted" textAlign="center">
+                      This invoice has been paid.
+                    </Text>
                     {invoice.paid_tx_hash && explorerBaseUrl && (
                       <Button
                         as="a"
                         href={`${explorerBaseUrl}/tx/${invoice.paid_tx_hash}`}
                         target="_blank"
                         rel="noreferrer"
-                        variant="link"
-                        color="tempo.accent"
-                        fontWeight="600"
-                        p={0}
-                        minW="auto"
+                        variant="outline"
+                        size="sm"
                       >
-                        Verify
+                        View transaction
                       </Button>
                     )}
-                  </HStack>
-                  {invoice.paid_tx_hash && !explorerBaseUrl && (
-                    <Text fontFamily="mono" fontSize="sm">
-                      {invoice.paid_tx_hash.slice(0, 14)}…
-                    </Text>
-                  )}
-                </Inset>
-              </SimpleGrid>
+                  </Stack>
+                )}
 
-              {invoice.image_url && (
-                <Inset p={3}>
-                  <Box borderRadius="12px" overflow="hidden">
-                    <img src={invoice.image_url} alt={invoice.title} />
-                  </Box>
-                </Inset>
-              )}
-              {invoice.description && (
-                <Text color="tempo.muted">{invoice.description}</Text>
-              )}
-            </Stack>
-          )}
-        </Stack>
-      </Surface>
+                {isConnected && invoice?.status !== 'paid' && (
+                  <Stack spacing={4}>
+                    {/* Payment Summary */}
+                    <Inset p={4}>
+                      <Stack spacing={3}>
+                        <Flex justify="space-between" align="center">
+                          <Text fontSize="sm" color="tempo.muted">Amount</Text>
+                          <Text fontWeight="600" fontSize="lg">
+                            ${Number(invoice.amount_usd).toFixed(2)}
+                          </Text>
+                        </Flex>
+                        {invoiceToken && (
+                          <Flex justify="space-between" align="center">
+                            <Text fontSize="sm" color="tempo.muted">Settle in</Text>
+                            <HStack spacing={2}>
+                              <TokenLogo token={invoiceToken} boxSize="20px" />
+                              <Text fontWeight="500">{invoiceToken.symbol}</Text>
+                            </HStack>
+                          </Flex>
+                        )}
+                        {needsSwap && payToken && quoteAmountIn && (
+                          <Box pt={2} borderTop="1px solid" borderColor="tempo.border">
+                            <Text fontSize="xs" color="tempo.muted" mb={1}>
+                              Paying with {payToken.symbol}
+                            </Text>
+                            <Text fontSize="sm" fontWeight="500">
+                              ≈ {Number(quoteAmountIn) / Number(10n ** BigInt(payToken.decimals ?? 6))} {payToken.symbol}
+                            </Text>
+                          </Box>
+                        )}
+                      </Stack>
+                    </Inset>
 
-      <Grid
-        templateColumns={{ base: '1fr', lg: 'repeat(12, 1fr)' }}
-        gap={6}
-      >
-        <GridItem colSpan={{ base: 12, lg: 7 }}>
-          <Surface p={6}>
-            <Stack spacing={4}>
-              <Heading size="sm">Pay invoice</Heading>
-              {!isConnected && (
-                <Button
-                  onClick={() => connect.connect({ connector })}
-                  disabled={!isSupabaseConfigured}
-                >
-                  Sign in to pay
-                </Button>
-              )}
-              {isConnected && invoice?.status !== 'paid' && (
-                <Stack spacing={3}>
-                  <Button
-                    onClick={handlePay}
-                    disabled={
-                      isDemo ||
-                      isPaying ||
-                      (needsSwap && !quoteAmountIn) ||
-                      (needsSwap && (balanceLoading || allowanceLoading))
-                    }
-                  >
-                    {payingLabel}
-                  </Button>
-                  {isDemo && (
-                    <Text fontSize="sm" color="tempo.muted">
-                      This is a demo invoice. Connect a real link to pay.
-                    </Text>
-                  )}
-                  {invoiceToken && (
-                    <HStack spacing={2} align="center" color="tempo.muted">
-                      <TokenLogo token={invoiceToken} boxSize="28px" />
-                      <Text fontSize="sm">
-                        We’ll settle in {invoiceToken.symbol} and handle swaps
-                        automatically.
+                    {/* Token Selection */}
+                    {payToken && (
+                      <Box>
+                        <HStack justify="space-between" align="center" mb={2}>
+                          <Text fontSize="sm" fontWeight="500">Payment method</Text>
+                          <Button
+                            size="xs"
+                            variant="outline"
+                            onClick={() => setShowTokenPicker((current) => !current)}
+                          >
+                            {showTokenPicker ? 'Cancel' : 'Change'}
+                          </Button>
+                        </HStack>
+                        {!showTokenPicker && (
+                          <Inset p={3}>
+                            <HStack spacing={3}>
+                              <TokenLogo token={payToken} boxSize="32px" />
+                              <Text fontWeight="500">{payToken.symbol}</Text>
+                              {payTokenBalance !== undefined && (
+                                <Text fontSize="sm" color="tempo.muted" ml="auto">
+                                  Balance: {(Number(payTokenBalance) / Number(10n ** BigInt(payToken.decimals ?? 6))).toFixed(2)}
+                                </Text>
+                              )}
+                            </HStack>
+                          </Inset>
+                        )}
+                        {showTokenPicker && (
+                          <Select
+                            value={payTokenAddress}
+                            onChange={(event) => {
+                              setPayTokenAddress(event.target.value as `0x${string}`)
+                              setShowTokenPicker(false)
+                            }}
+                            disabled={!invoice || !isConnected}
+                          >
+                            {tokens.map((token) => (
+                              <option key={token.address} value={token.address}>
+                                {token.symbol}
+                              </option>
+                            ))}
+                          </Select>
+                        )}
+                      </Box>
+                    )}
+
+                    {/* Pay Button */}
+                    <Button
+                      onClick={handlePay}
+                      disabled={
+                        isDemo ||
+                        isPaying ||
+                        (needsSwap && !quoteAmountIn) ||
+                        (needsSwap && (balanceLoading || allowanceLoading))
+                      }
+                      size="lg"
+                      width="100%"
+                    >
+                      {payingLabel}
+                    </Button>
+
+                    {payError && (
+                      <Box p={3} bg="rgba(255,0,0,0.1)" borderRadius="6px" border="1px solid rgba(255,0,0,0.2)">
+                        <Text color="tempo.error" fontSize="sm">{payError}</Text>
+                      </Box>
+                    )}
+
+                    {isDemo && (
+                      <Text fontSize="xs" color="tempo.muted" textAlign="center">
+                        This is a demo invoice. Connect a real link to pay.
                       </Text>
-                    </HStack>
-                  )}
-                  {payToken && (
-                    <HStack justify="space-between" align="center">
-                      <HStack spacing={2}>
-                        <TokenLogo token={payToken} boxSize="28px" />
-                        <Text fontSize="sm" color="tempo.muted">
-                          Paying with {payToken.symbol}
-                        </Text>
-                      </HStack>
-                      <Button
-                        size="xs"
-                        variant="outline"
-                        onClick={() => setShowTokenPicker((current) => !current)}
-                      >
-                        Change
-                      </Button>
-                    </HStack>
-                  )}
-                  {showTokenPicker && (
-                    <HStack spacing={3}>
-                      {payToken && <TokenLogo token={payToken} boxSize="32px" />}
-                      <Select
-                        flex="1"
-                        value={payTokenAddress}
-                        onChange={(event) => {
-                          setPayTokenAddress(event.target.value as `0x${string}`)
-                          setShowTokenPicker(false)
-                        }}
-                        disabled={!invoice || !isConnected}
-                      >
-                        {tokens.map((token) => (
-                          <option key={token.address} value={token.address}>
-                            {token.symbol}
-                          </option>
-                        ))}
-                      </Select>
-                    </HStack>
-                  )}
-                </Stack>
-              )}
-              {invoice?.status === 'paid' && (
-                <Button variant="outline" disabled>
-                  Already paid
-                </Button>
-              )}
-              {payError && <Text color="red.300">{payError}</Text>}
-            </Stack>
-          </Surface>
+                    )}
+                  </Stack>
+                )}
+              </Stack>
+            </Surface>
+          </Box>
         </GridItem>
       </Grid>
     </Stack>
