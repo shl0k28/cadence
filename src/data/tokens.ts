@@ -4,6 +4,7 @@ export type TempoToken = {
   address: `0x${string}`
   decimals: number
   faucet: boolean
+  logoUri?: string
 }
 
 export const ACCEPTED_TOKENS: TempoToken[] = [
@@ -12,7 +13,7 @@ export const ACCEPTED_TOKENS: TempoToken[] = [
     name: 'pathUSD',
     address: '0x20c0000000000000000000000000000000000000',
     decimals: 6,
-    faucet: false,
+    faucet: true,
   },
   {
     symbol: 'AlphaUSD',

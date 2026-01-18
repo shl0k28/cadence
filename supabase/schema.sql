@@ -148,3 +148,24 @@ begin
     create policy payments_public_update on payments for update using (true) with check (true);
   end if;
 end $$;
+
+-- Storage bucket for invoice images (public read; open write for prototype).
+insert into storage.buckets (id, name, public)
+values ('invoice-images', 'invoice-images', true)
+on conflict (id) do nothing;
+
+do $$
+begin
+  if not exists (select 1 from pg_policies where policyname = 'invoice_images_read') then
+    create policy invoice_images_read on storage.objects
+    for select using (bucket_id = 'invoice-images');
+  end if;
+  if not exists (select 1 from pg_policies where policyname = 'invoice_images_insert') then
+    create policy invoice_images_insert on storage.objects
+    for insert with check (bucket_id = 'invoice-images');
+  end if;
+  if not exists (select 1 from pg_policies where policyname = 'invoice_images_update') then
+    create policy invoice_images_update on storage.objects
+    for update using (bucket_id = 'invoice-images') with check (bucket_id = 'invoice-images');
+  end if;
+end $$;
