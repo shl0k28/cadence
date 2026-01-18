@@ -48,28 +48,34 @@ const HeaderBar = ({
     position="sticky"
     top="0"
     zIndex="10"
-    px={{ base: 6, lg: 8 }}
     py={4}
     align="center"
-    justify="space-between"
     bg="rgba(29,29,29,0.9)"
     backdropFilter="blur(16px)"
   >
-    <ChakraLink as={RouterLink} to="/" _hover={{ textDecoration: 'none' }}>
-      <HStack spacing={2}>
-        <Text fontSize="lg" fontWeight="700" fontFamily="mono" color="tempo.accent">
-          Cadence
-        </Text>
+    <Flex
+      maxW="1200px"
+      mx="auto"
+      w="100%"
+      px={{ base: 6, lg: 8 }}
+      align="center"
+      justify="space-between"
+    >
+      <ChakraLink as={RouterLink} to="/" _hover={{ textDecoration: 'none' }}>
+        <HStack spacing={2}>
+          <Text fontSize="lg" fontWeight="700" fontFamily="mono" color="tempo.accent">
+            Cadence
+          </Text>
+        </HStack>
+      </ChakraLink>
+      <HStack spacing={6}>
+        {profile?.role === 'merchant' && (
+          <ChakraLink as={RouterLink} to="/merchant">
+            Dashboard
+          </ChakraLink>
+        )}
       </HStack>
-    </ChakraLink>
-    <HStack spacing={6}>
-      {profile?.role === 'merchant' && (
-        <ChakraLink as={RouterLink} to="/merchant">
-          Dashboard
-        </ChakraLink>
-      )}
-    </HStack>
-    <HStack spacing={3}>
+      <HStack spacing={3}>
       {profile && (
         <Badge bg="tempo.panelStrong" color="tempo.text" borderRadius="999px">
           {profile.role}
@@ -122,7 +128,8 @@ const HeaderBar = ({
           </Button>
         </>
       )}
-    </HStack>
+      </HStack>
+    </Flex>
   </Flex>
 )
 

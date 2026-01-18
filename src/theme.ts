@@ -8,9 +8,9 @@ const config: ThemeConfig = {
 const theme = extendTheme({
   config,
   fonts: {
-    body: "'Iosevka-Aile', system-ui, -apple-system, 'Segoe UI', sans-serif",
-    heading: "'Iosevka-Aile', system-ui, -apple-system, 'Segoe UI', sans-serif",
-    mono: "'Iosevka-Aile', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+    body: "'Iosevka', system-ui, -apple-system, 'Segoe UI', sans-serif",
+    heading: "'Iosevka Curly', system-ui, -apple-system, 'Segoe UI', sans-serif",
+    mono: "'Iosevka', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
   },
   colors: {
     tempo: {
@@ -27,29 +27,6 @@ const theme = extendTheme({
   },
   styles: {
     global: {
-      '@font-face': [
-        {
-          fontFamily: 'Iosevka-Aile',
-          src: "url('/fonts/Iosevka-Aile-01.ttf') format('truetype')",
-          fontWeight: '400',
-          fontStyle: 'normal',
-          fontDisplay: 'swap',
-        },
-        {
-          fontFamily: 'Iosevka-Aile',
-          src: "url('/fonts/Iosevka-Aile-Italic-03.ttf') format('truetype')",
-          fontWeight: '400',
-          fontStyle: 'italic',
-          fontDisplay: 'swap',
-        },
-        {
-          fontFamily: 'Iosevka-Aile',
-          src: "url('/fonts/Iosevka-Aile-Oblique-02.ttf') format('truetype')",
-          fontWeight: '400',
-          fontStyle: 'oblique',
-          fontDisplay: 'swap',
-        },
-      ],
       body: {
         bg: 'tempo.bg',
         color: 'tempo.text',
@@ -79,6 +56,7 @@ const theme = extendTheme({
       baseStyle: {
         borderRadius: '6px',
         fontWeight: '600',
+        fontFamily: "'Iosevka Etoile', 'Iosevka', system-ui, sans-serif",
       },
       variants: {
         solid: {
@@ -91,6 +69,17 @@ const theme = extendTheme({
           color: 'tempo.text',
           _hover: { borderColor: 'tempo.accent', color: 'tempo.accent' },
         },
+      },
+    },
+    Badge: {
+      baseStyle: {
+        fontFamily: "'Iosevka Curly', 'Iosevka', system-ui, sans-serif",
+        fontWeight: '600',
+      },
+    },
+    Heading: {
+      baseStyle: {
+        fontFamily: "'Iosevka Curly', 'Iosevka', system-ui, sans-serif",
       },
     },
     Input: {

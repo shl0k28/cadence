@@ -567,6 +567,21 @@
   resolved "https://registry.yarnpkg.com/@fontsource/inter/-/inter-5.2.8.tgz#10c95d877d972c7de5bd4592309d42fb6a5e1a5b"
   integrity sha512-P6r5WnJoKiNVV+zvW2xM13gNdFhAEpQ9dQJHt3naLvfg+LkF2ldgSLiF4T41lf1SQCM9QmkqPTn4TH568IRagg==
 
+"@fontsource/iosevka-curly@^5.2.5":
+  version "5.2.5"
+  resolved "https://registry.yarnpkg.com/@fontsource/iosevka-curly/-/iosevka-curly-5.2.5.tgz#06302bf801555cf4db847b6009a3aac0155746be"
+  integrity sha512-IwcvgwOpytFc59R3eeQrCGi4jYZrm07KvDM9DX2lvoSTr0rbw5hMvZf/y0PkPE6tmAG4ZEX1cPJ5sHXYizBufw==
+
+"@fontsource/iosevka-etoile@^5.2.5":
+  version "5.2.5"
+  resolved "https://registry.yarnpkg.com/@fontsource/iosevka-etoile/-/iosevka-etoile-5.2.5.tgz#53eb9bc4beb264e90e2aa7c07a42927d64e911e7"
+  integrity sha512-DaqaNB1G6qhGh+D+WxZUrln0UJmrM7qXgJgdeXm3U1ekcIph2aWPAcmI1edDj9FLkuGl2ZU9TYywIvzVF6lz0Q==
+
+"@fontsource/iosevka@^5.2.5":
+  version "5.2.5"
+  resolved "https://registry.yarnpkg.com/@fontsource/iosevka/-/iosevka-5.2.5.tgz#578f57a00142fd0f47b20c4a38ff8dc7484677eb"
+  integrity sha512-Zv/UHJodDug1LcnWv2u2+GPp3oWP3U6Xp16cJOsqqZQNsCu8sA/ttT331N0NypxBZ+7c8szlSRlYDcy9liZ8pw==
+
 "@fontsource/oswald@^5.0.16":
   version "5.2.8"
   resolved "https://registry.yarnpkg.com/@fontsource/oswald/-/oswald-5.2.8.tgz#8e2f29f3a08f5c928e995770a0727bdb3ba5e6cd"

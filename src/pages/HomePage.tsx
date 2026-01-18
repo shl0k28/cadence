@@ -98,10 +98,9 @@ const HomePage = ({
             </Text>
           </HStack>
           <Stack spacing={4} maxW="720px">
-            <Heading size="2xl">Search. Create. Settle.</Heading>
+            <Heading size="2xl">Ultrasound Finance.</Heading>
             <Text fontSize="lg" color="tempo.muted">
-              Generate Tempo payment links, share instantly, and track on-chain status —
-              same design language as the Tempo Explorer.
+                Move money across the globe at the speed of light. (Available on Tempo Testnet)
             </Text>
           </Stack>
           <Box w="100%" maxW="520px">
