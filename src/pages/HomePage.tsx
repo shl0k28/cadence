@@ -103,7 +103,7 @@ const HomePage = ({
                 Move money across the globe at the speed of light. (Available on Tempo Testnet)
             </Text>
           </Stack>
-          <Box w="100%" maxW="520px">
+          {/* <Box w="100%" maxW="520px">
             <HStack
               as={Surface}
               px={3}
@@ -125,7 +125,7 @@ const HomePage = ({
                 View latest
               </Button>
             </HStack>
-          </Box>
+          </Box> */}
           <HStack spacing={4} wrap="wrap" justify="center" color="tempo.muted">
             <Text fontSize="sm">Try</Text>
             <HStack spacing={3} fontSize="sm">
@@ -154,16 +154,16 @@ const HomePage = ({
       <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
         {[
           {
-            title: 'On-chain first',
-            copy: 'Instant settlement on Tempo testnet with swaps handled automatically.',
+            title: 'Instant Invoicing',
+            copy: 'Create & settle invoices instantly. No 3rd Party.',
           },
           {
-            title: 'Passkey-native',
-            copy: 'Sign in with passkeys; no extensions required.',
+            title: 'Fingerprint Accounts',
+            copy: 'No Emails, No Documents, Just your Touch Id.',
           },
           {
-            title: 'Explorer-aligned',
-            copy: 'UI mirrors Tempo Explorer for a cohesive developer experience.',
+            title: 'EVM Compatible',
+            copy: 'Compatible with all popular tokens on EVM chains ',
           },
         ].map((item) => (
           <Surface key={item.title} p={5}>
